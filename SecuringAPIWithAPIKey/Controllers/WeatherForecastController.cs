@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SecuringAPIWithAPIKey.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace SecuringAPIWithAPIKey.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ApiKey]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

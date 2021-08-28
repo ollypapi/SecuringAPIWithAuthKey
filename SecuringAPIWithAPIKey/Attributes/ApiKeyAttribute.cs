@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace SecuringAPIWithAPIKey.Attributes
 {
-    [AttributeUsage(validOn: AttributeTargets.Class)]
+    [AttributeUsage(validOn: AttributeTargets.Class | AttributeTargets.Method)]
     public class ApiKeyAttribute : Attribute, IAsyncActionFilter
     {
         private const string APIKEYNAME = "ApiKey";
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            // Check if APIKey was stated in the header, if not return 401
             if (!context.HttpContext.Request.Headers.TryGetValue(APIKEYNAME, out var extractedApiKey))
             {
                 context.Result = new ContentResult()
@@ -26,6 +27,8 @@ namespace SecuringAPIWithAPIKey.Attributes
                 return;
             }
 
+
+            // If the API key was there, check if the value is match with what we have in our code
             var appSettings = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
 
             var apiKey = appSettings.GetValue<string>(APIKEYNAME);
